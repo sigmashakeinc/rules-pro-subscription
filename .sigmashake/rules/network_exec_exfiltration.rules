@@ -1,0 +1,15 @@
+# network_exec_exfiltration.rules
+# Technology: network | Capability: exec | Description: Exfiltration and reverse shell prevention
+
+rule block-reverse-shells {
+  enabled true
+  priority 90
+  severity error
+  DENY execution
+  IF command CONTAINS "nc -e"
+  OR command CONTAINS "ncat -e"
+  OR command CONTAINS "bash -i"
+  OR command CONTAINS "/dev/tcp/"
+  OR command CONTAINS "/dev/udp/"
+  MESSAGE "Pro Protection: Reverse shell execution and raw socket creation are blocked to prevent data exfiltration."
+}

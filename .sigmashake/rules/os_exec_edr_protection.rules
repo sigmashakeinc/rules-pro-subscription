@@ -1,0 +1,26 @@
+# os_exec_edr_protection.rules
+# Technology: os | Capability: exec | Description: EDR bypass prevention
+
+rule protect-crowdstrike-sentinelone {
+  enabled true
+  priority 100
+  severity error
+  DENY execution
+  IF command CONTAINS "falconctl"
+  OR command CONTAINS "sentinelctl"
+  OR command CONTAINS "falcon-sensor"
+  OR command CONTAINS "SentinelAgent"
+  OR command CONTAINS "CSFalconService.exe"
+  OR command CONTAINS "SentinelOneInstaller"
+  MESSAGE "Pro Protection: Modifying, silencing, or stopping EDR services (CrowdStrike, SentinelOne) is strictly prohibited."
+}
+
+rule block-edr-wfp-silencing {
+  enabled true
+  priority 95
+  severity error
+  DENY execution
+  IF command CONTAINS "netsh wfp filter add"
+  OR command CONTAINS "netsh advfirewall firewall add rule"
+  MESSAGE "Pro Protection: EDR silencing attempts via Windows Filtering Platform (WFP) or Firewall rules are blocked."
+}

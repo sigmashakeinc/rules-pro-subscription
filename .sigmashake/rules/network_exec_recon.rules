@@ -1,0 +1,25 @@
+# network_exec_recon.rules
+# Technology: network | Capability: exec | Description: Prevent internal network reconnaissance and lateral movement
+
+rule block-internal-port-scanning {
+  enabled true
+  priority 100
+  severity error
+  DENY execution
+  IF command WORD "nmap"
+  OR command WORD "masscan"
+  OR command WORD "arp-scan"
+  MESSAGE "Pro Protection: Internal network scanning and reconnaissance tools are blocked to prevent lateral movement."
+}
+
+rule block-ssh-pivoting {
+  enabled true
+  priority 95
+  severity error
+  DENY execution
+  IF command WORD "ssh" AND command CONTAINS "-J"
+  OR command WORD "ssh" AND command CONTAINS "-D"
+  OR command WORD "ssh" AND command CONTAINS "-L"
+  OR command WORD "ssh" AND command CONTAINS "-R"
+  MESSAGE "Pro Protection: SSH pivoting, port forwarding, and proxy jumps are blocked to prevent lateral movement."
+}

@@ -1,0 +1,13 @@
+# npm_exec_typosquatting.rules
+# Technology: npm | Capability: exec | Description: Prevent dependency confusion and typosquatting
+
+rule ask-before-new-package-install {
+  enabled true
+  priority 90
+  severity warning
+  ASK execution
+  IF command WORD "npm" AND command WORD "install"
+  OR command WORD "pip" AND command WORD "install"
+  MESSAGE "Pro Protection: Installing new, unverified packages could lead to typosquatting or dependency confusion attacks."
+  PROMPT "The agent wants to install a new package. Have you verified the package name is correct and safe?"
+}

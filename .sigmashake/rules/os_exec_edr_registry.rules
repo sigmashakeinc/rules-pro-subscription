@@ -1,0 +1,22 @@
+# os_exec_edr_registry.rules
+# Technology: os | Capability: exec | Description: Prevent EDR disablement via Registry and WMI
+
+rule block-wmi-disable {
+  enabled true
+  priority 100
+  severity error
+  DENY execution
+  IF command CONTAINS "reg add" AND command CONTAINS "Services\\Winmgmt" AND command CONTAINS "REG_DWORD /d 4"
+  OR command CONTAINS "WINEVT\\Channels\\Microsoft-Windows-WMI-Activity" AND command CONTAINS "REG_DWORD /d 0"
+  MESSAGE "Pro Protection: Disabling WMI services or logging (often used for EDR telemetry) is blocked."
+}
+
+rule block-falcon-registry-tamper {
+  enabled true
+  priority 100
+  severity error
+  DENY execution
+  IF command CONTAINS "reg add" AND command CONTAINS "Services\\CSAgent"
+  OR command CONTAINS "reg add" AND command CONTAINS "Services\\CSFalconService"
+  MESSAGE "Pro Protection: Tampering with CrowdStrike Falcon registry keys is blocked."
+}

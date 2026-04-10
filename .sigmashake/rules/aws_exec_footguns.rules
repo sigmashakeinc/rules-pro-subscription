@@ -1,0 +1,21 @@
+# aws_exec_footguns.rules
+# Technology: aws | Capability: exec | Description: Prevent AWS CLI destructive operations
+
+rule block-aws-s3-sync-delete {
+  enabled true
+  priority 95
+  severity error
+  DENY execution
+  IF command WORD "aws" AND command WORD "s3" AND command WORD "sync" AND command CONTAINS "--delete" AND command NOT CONTAINS "--dryrun"
+  MESSAGE "Pro Protection: 'aws s3 sync --delete' without '--dryrun' is blocked to prevent accidental bucket wipes."
+}
+
+rule block-aws-iam-delete-inline-policy {
+  enabled true
+  priority 95
+  severity error
+  DENY execution
+  IF command WORD "aws" AND command WORD "iam" AND command WORD "delete-user-policy"
+  OR command WORD "aws" AND command WORD "iam" AND command WORD "delete-role-policy"
+  MESSAGE "Pro Protection: Deleting inline IAM policies is highly destructive and blocked. Detach managed policies instead."
+}

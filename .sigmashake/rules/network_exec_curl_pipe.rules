@@ -1,0 +1,14 @@
+# network_exec_curl_pipe.rules
+# Technology: network | Capability: exec | Description: Prevent pipe-to-shell execution
+
+rule block-curl-pipe-sh {
+  enabled true
+  priority 95
+  severity error
+  DENY execution
+  IF command CONTAINS "curl " AND command CONTAINS " | sh"
+  OR command CONTAINS "curl " AND command CONTAINS " | bash"
+  OR command CONTAINS "wget " AND command CONTAINS " | sh"
+  OR command CONTAINS "wget " AND command CONTAINS " | bash"
+  MESSAGE "Pro Protection: Piping downloaded web content directly into a shell is blocked to prevent malware execution."
+}
